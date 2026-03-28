@@ -1,0 +1,41 @@
+[x]
+# public bearer（可留空：程序会使用内置默认值）
+public_bearer_token = ""
+
+# 采集代理（例如 "http://127.0.0.1:7890"），不需要可留空
+fetch_proxy = ""
+
+fetch_timeout_sec = 20
+fetch_user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0 Safari/537.36"
+
+# GraphQL UserTweets 的 query_id（可能会变；失效时再更新）
+user_tweets_query_id = "FOlovQsiHGDls3c0Q_HaSQ"
+
+# username -> userId 的 GraphQL query_id（可能会变；失效时再更新）
+user_by_screen_name_query_id = "s9p9_q_27z5NnUnU0x7V_Q"
+
+[poll]
+targets = ["business"]
+interval_sec = 5
+max_results = 20
+checkpoint_file = "checkpoints.json"
+
+# 飞书应用发 IM：app_id、app_secret、receive_id（及 receive_id_type）。
+# 文档：https://open.feishu.cn/document/server-docs/api-call-guide/calling-process/get-
+[feishu]
+openapi_base = "https://open.feishu.cn"
+timeout_sec = 15
+app_id = ""
+app_secret = ""
+receive_id = ""
+receive_id_type = "chat_id"
+
+# DeepSeek（OpenAI 兼容）。优先环境变量 DEEPSEEK_API_KEY，勿将密钥提交到 Git。
+[llm]
+api_key = ""
+base_url = "https://api.deepseek.com"
+model = "deepseek-chat"
+timeout_sec = 120
+
+# main.py 固定走 LangGraph pipeline；需 pip install -e ".[pipeline]"
+
