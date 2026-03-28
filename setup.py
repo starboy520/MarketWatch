@@ -10,7 +10,7 @@ README = (ROOT / "README.md").read_text(encoding="utf-8")
 setup(
     name="news-agent",
     version="0.1.0",
-    description="X timeline ingestion + LangGraph/DeepSeek + Feishu (per design doc)",
+    description="MarketWatch: X timeline + LangGraph + DeepSeek + Feishu (see docs/)",
     long_description=README,
     long_description_content_type="text/markdown",
     python_requires=">=3.10",
@@ -18,6 +18,9 @@ setup(
         where=".",
         include=["ingestion*", "pipeline*"],
     ),
+    package_data={
+        "pipeline.prompts": ["triage_system.txt", "translate_system.txt"],
+    },
     install_requires=["requests>=2.28"],
     extras_require={
         "dev": ["pytest", "setuptools>=61"],

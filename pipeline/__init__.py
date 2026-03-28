@@ -1,4 +1,4 @@
-"""编排层：LangGraph StateGraph（见 LangGraph 状态机设计.md）。"""
+"""编排层：LangGraph StateGraph（见 docs/LangGraph 状态机设计.md）。"""
 
 from __future__ import annotations
 

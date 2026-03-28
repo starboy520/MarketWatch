@@ -1,4 +1,4 @@
-"""采集层标准化事件（对齐 bloomberg_twitter_agent_design.md §4.1）。"""
+"""采集层标准化事件（对齐 docs/bloomberg_twitter_agent_design.md §4.1）。"""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ EVENT_NAME = "tweet.received"
 @dataclass(frozen=True)
 class TweetEvent:
     """
-    采集层标准事件（对齐 bloomberg_twitter_agent_design.md §4.1）。
+    采集层标准事件（对齐 docs/bloomberg_twitter_agent_design.md §4.1）。
 
     字段约定
     --------

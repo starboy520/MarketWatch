@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import json
+import os
 import random
 import time
 from dataclasses import dataclass
@@ -18,11 +19,6 @@ from urllib3.exceptions import MaxRetryError, NewConnectionError, ProtocolError
 from urllib3.exceptions import SSLError as Urllib3SSLError
 
 from ingestion.config import AppConfig, load_config
-
-_DEFAULT_BEARER_TOKEN = (
-    "AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs="
-    "1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA"
-)
 
 _RETRYABLE_HTTP_STATUS = frozenset({429, 502, 503, 504})
 
@@ -250,13 +246,27 @@ class XClient:
         )
 
 
+def _resolve_x_bearer_token(*, explicit: Optional[str], from_config: str) -> str:
+    """
+    Web GraphQL 使用的 public Bearer，须由配置或环境变量提供；**不在代码库中硬编码**。
+    优先：参数 ``explicit`` → ``config.toml`` ``[x] public_bearer_token`` → ``NEWS_AGENT_X_BEARER``。
+    """
+    bt = (explicit or from_config or os.environ.get("NEWS_AGENT_X_BEARER", "")).strip()
+    if not bt:
+        raise ValueError(
+            "X GraphQL 需要 Bearer：请在 config.toml 的 [x] public_bearer_token 填写，"
+            "或设置环境变量 NEWS_AGENT_X_BEARER（勿提交到 Git）。说明见 docs/配置与安全.md"
+        )
+    return bt
+
+
 def create_x_client(
     bearer_token: Optional[str] = None,
 ) -> XClient:
     """创建采集客户端。"""
     cfg: AppConfig = load_config()
     x = cfg.x
-    bt = (bearer_token or x.public_bearer_token or _DEFAULT_BEARER_TOKEN).strip()
+    bt = _resolve_x_bearer_token(explicit=bearer_token, from_config=x.public_bearer_token)
     return XClient(
         user_tweets_query_id=x.user_tweets_query_id,
         timeout_sec=float(x.fetch_timeout_sec),

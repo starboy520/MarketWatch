@@ -1,7 +1,7 @@
 """
 采集层：X Web GraphQL → ``TweetEvent``；配置、时间线轮询、飞书客户端、checkpoint。
 
-分析侧 JSON 形状说明见项目根目录 ``llm_schema.py``（非采集职责）。
+分析侧归一化结构见 ``pipeline.state.PipelineState`` 与 ``pipeline.deepseek.TweetTriageAnalyzer``（非采集职责）。
 """
 
 from ingestion.checkpoints import PollCheckpointStore

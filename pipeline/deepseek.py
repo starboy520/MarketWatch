@@ -13,28 +13,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 
 from ingestion.config import LlmConfig
 
-_SYSTEM_PROMPT = """
-# Role
-你是一位资深的全球科技与 A 股市场分析专家，擅长从彭博社（Bloomberg）的推文中捕捉行业拐点。
-
-# Task
-分析输入的推文，判断其与「中国宏观、AI、半导体、光模块/CPO、出口管制」的相关性、情绪及核心主题；
-并单独给出宽松口径标记（见 broad_push_eligible），供下游与 is_relevant 组合使用。
-
-# Constraints
-- is_relevant：**含义不变**——仅当推文涉及上述监控领域**且**对资产/行业具有**可讨论的市场影响**时为 true；细则性闲聊、无价格/供应链/政策传导含义的可判 false。
-- broad_push_eligible：**新增宽松口径**，与 is_relevant 独立判定。当推文**实质涉及人工智能 / AI**（含算力、大模型、机器人、AI 监管与产业等），**或** **实质涉及中国**（含中国大陆政治经济、社会、科技、公司、人物、两岸与涉华地缘等，**不要求**限定半导体或二级市场）时为 true；零星无关提及、纯灌水可无信息量时为 false。
-- analysis.themes: 必须从 [semiconductor, ai, optical_module, macro, geopolitical, other] 中选择。
-- analysis.sentiment: 评价推文内容对该行业或资产的影响（利好/利空/中性），而非作者语气。
-- confidence: 你对 **is_relevant** 判断的置信度，0 到 1。
-
-# Output Format
-只输出一个 JSON 对象，键为：
-- is_relevant: boolean（严格：监控领域 + 市场影响）
-- broad_push_eligible: boolean（宽松：AI 或中国；供后续路由/策略，不改变 is_relevant 语义）
-- analysis: object，含 themes (string[])、keywords (string[])、sentiment ("positive"|"negative"|"neutral")、rationale (string，一句逻辑说明)
-- confidence: number（针对 is_relevant）
-"""
+from .prompts import TRIAGE_SYSTEM_PROMPT, TRANSLATE_SYSTEM_PROMPT
 
 
 def _log_llm_io(
@@ -63,12 +42,6 @@ def _message_text(content: Any) -> str:
             str(x.get("text", x)) if isinstance(x, dict) else str(x) for x in content
         ).strip()
     return str(content).strip()
-
-
-_TRANSLATE_SYSTEM_PROMPT = (
-    "你是专业译者。将用户给出的社交媒体帖子译为**简体中文**。\n"
-    "只输出译文正文，不要引号、不要解释、不要「译文：」等前缀。"
-)
 
 
 @dataclass(frozen=True)
@@ -200,7 +173,7 @@ class TweetTriageAnalyzer(BaseDeepSeekChatClient):
         )
         resp = self.llm.invoke(
             [
-                SystemMessage(content=_SYSTEM_PROMPT),
+                SystemMessage(content=TRIAGE_SYSTEM_PROMPT),
                 HumanMessage(content=user_msg),
             ]
         )
@@ -229,7 +202,7 @@ class TweetBodyZhTranslator(BaseDeepSeekChatClient):
         user_msg = f"请翻译以下全文：\n\n{text[:6000]}"
         resp = self.llm.invoke(
             [
-                SystemMessage(content=_TRANSLATE_SYSTEM_PROMPT),
+                SystemMessage(content=TRANSLATE_SYSTEM_PROMPT),
                 HumanMessage(content=user_msg),
             ]
         )

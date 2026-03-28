@@ -4,7 +4,7 @@
 用法：
   cp config.example.toml config.toml
   pip install -e ".[pipeline]"
-  # 配置 X、[feishu]、[llm]（DEEPSEEK_API_KEY 或 [llm] api_key）
+  # 按 docs/配置与安全.md 填写 [x] public_bearer_token（或 NEWS_AGENT_X_BEARER）、飞书、[llm]
   python main.py
 """
 

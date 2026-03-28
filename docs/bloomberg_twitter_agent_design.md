@@ -88,7 +88,7 @@
 **Prompt 设计要点**：
 
 - 明确**标签定义与反例**（例如「光模块」与「光纤光缆」区分若业务需要）。
-- 要求输出 **JSON Schema**（见第 5 节），禁止自由叙述为主输出。
+- 要求输出 **结构化 JSON**（键约定以仓库内 **`pipeline/prompts/triage_system.txt`** 为准；运行时归一化见编排层 `State.analysis`），禁止自由叙述为主输出。第 5 节 JSON 为含板块/个股映射的**终态目标示例**，可与当前 MVP 字段并行演进。
 - **温度**：分类任务建议 `0～0.3`；需要稳定性可固定 seed（若供应商支持）。
 
 **是否只用大模型**：**是（对「是否相关」这一层）**；**板块/代码**建议**检索 + 约束生成**（见 4.4），避免幻觉。
@@ -148,9 +148,15 @@
 
 ---
 
-## 5. LLM 统一输出 Schema（示例）
+## 5. LLM 输出约定与 Schema 示例
 
-便于工程落地与飞书渲染：
+**当前实现（MVP）**
+
+- **系统提示**：`pipeline/prompts/triage_system.txt`（相关性、broad_push_eligible、嵌套 `analysis` 等）。
+- **英译中系统提示**：`pipeline/prompts/translate_system.txt`。
+- **图内字段**：模型返回经 `TweetTriageAnalyzer._normalize_payload` 写入 LangGraph **`PipelineState.analysis`**（见 `pipeline/state.py`），含 `is_relevant`、`broad_push_eligible`、`themes`、`keywords`、`sentiment` 等；**尚未**包含下述 `market_impact` 全量结构。
+
+**终态目标示例**（便于工程落地与飞书渲染；含 A 股映射时可向此形状收敛）：
 
 ```json
 {
@@ -174,7 +180,7 @@
 }
 ```
 
-字段名可按内部规范调整，关键是**结构化 + 可追溯**。
+字段名可按内部规范调整，关键是**结构化 + 可追溯**。修改 triage 输出键时，请同步更新 **`triage_system.txt`** 与 **`_normalize_payload`**，并视情况调整本节约定。
 
 ---
 

@@ -1,4 +1,4 @@
-"""Pipeline State：与《LangGraph 状态机设计.md》字段对齐。
+"""Pipeline State：与《docs/LangGraph 状态机设计.md》字段对齐。
 
 与 ``ingestion.models.TweetEvent`` 的对应关系（由 ``TweetEvent.pipeline_initial_state()`` 写入）：
 
