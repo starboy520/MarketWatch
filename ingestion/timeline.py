@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 from ingestion.models import EVENT_NAME, TweetEvent, normalize_post_to_event
+from ingestion.timeutil import format_created_at_bjt
 from ingestion.x_api import (
     XClient,
 )
@@ -38,7 +39,8 @@ def format_events_message(
     lines.append(f"共 {len(events)} 条事件：")
     for ev in sorted(events, key=lambda x: _id_sort_key(x.id)):
         text = ev.text.replace("\n", " ")
-        lines.append(f"- id={ev.id} | {ev.created_at or ''}")
+        ts = format_created_at_bjt(ev.created_at) or (ev.created_at or "")
+        lines.append(f"- id={ev.id} | {ts}")
         lines.append(f"  {text}")
         lines.append(f"  {ev.permalink}")
     return "\n".join(lines)

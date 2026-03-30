@@ -12,6 +12,7 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from ingestion.config import LlmConfig
+from ingestion.timeutil import format_created_at_bjt
 
 from .prompts import TRIAGE_SYSTEM_PROMPT, TRANSLATE_SYSTEM_PROMPT
 
@@ -163,7 +164,7 @@ class TweetTriageAnalyzer(BaseDeepSeekChatClient):
     ) -> TriageResult:
         meta_lines: list[str] = []
         if created_at:
-            meta_lines.append(f"发布时间：{created_at}")
+            meta_lines.append(f"发布时间：{format_created_at_bjt(created_at) or created_at}")
         if source:
             meta_lines.append(f"事件来源：{source}")
         meta_block = ("\n" + "\n".join(meta_lines) + "\n") if meta_lines else "\n"

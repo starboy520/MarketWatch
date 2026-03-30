@@ -11,6 +11,7 @@ import requests
 
 from ingestion.config import FeishuConfig
 from ingestion.models import TweetEvent
+from ingestion.timeutil import format_created_at_bjt
 
 _TENANT_TOKEN_PATH = "/open-apis/auth/v3/tenant_access_token/internal"
 _IM_MESSAGES_PATH = "/open-apis/im/v1/messages"
@@ -66,7 +67,7 @@ class FeishuClient:
         body = ev.text.replace("\r", "").strip()
         body_one = " ".join(body.split()) if body else "(无正文)"
         body_one = _truncate(body_one, 3500)
-        ts = (ev.created_at or "").strip() or "—"
+        ts = format_created_at_bjt(ev.created_at) or ((ev.created_at or "").strip() or "—")
         link = (ev.permalink or "").strip()
         lines = [
             f"🐦 新帖 @{ev.author_username}",

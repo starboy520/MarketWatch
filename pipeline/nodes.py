@@ -8,6 +8,7 @@ from typing import Any, Callable, Optional
 
 from ingestion.config import LlmConfig
 from ingestion.feishu import FeishuClient
+from ingestion.timeutil import format_created_at_bjt
 from pipeline.state import PipelineState
 
 _EMPTY_MARKET_IMPACT: dict[str, Any] = {
@@ -110,7 +111,9 @@ def make_relevance_filter(
                 tr = analyzer.analyze(
                     raw_text=raw,
                     author_username=author,
-                    created_at=state.get("created_at"),
+                    created_at=format_created_at_bjt(
+                        state.get("created_at") if isinstance(state.get("created_at"), str) else None
+                    ),
                     source=state.get("source"),
                 )
                 analysis = tr.analysis
@@ -228,7 +231,8 @@ def node_card_renderer(state: PipelineState) -> dict[str, Any]:
     sent = analysis.get("sentiment") or {}
     themes = analysis.get("themes") or []
     keywords = analysis.get("keywords") or []
-    created = state.get("created_at")
+    created_raw = state.get("created_at")
+    created = format_created_at_bjt(created_raw if isinstance(created_raw, str) else None) or created_raw
     src = state.get("source") or ""
     zh_block: list[str] = []
     raw_zh = state.get("raw_text_zh")
