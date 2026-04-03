@@ -2,6 +2,7 @@
 
 | 文档 | 说明 |
 |------|------|
+| [setup.md](./setup.md) | 虚拟环境、依赖安装、一键脚本 `scripts/setup_env.sh` |
 | [配置与安全.md](./配置与安全.md) | `config.toml`、环境变量、密钥与 **X Bearer**（无代码内硬编码） |
 | [项目架构.md](./项目架构.md) | 以 `main.py` 为入口的模块、数据流与 LangGraph 节点 |
 | [bloomberg_twitter_agent_design.md](./bloomberg_twitter_agent_design.md) | 产品背景、分层边界、风险与非目标 |

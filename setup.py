@@ -21,7 +21,10 @@ setup(
     package_data={
         "pipeline.prompts": ["triage_system.txt", "translate_system.txt"],
     },
-    install_requires=["requests>=2.28"],
+    install_requires=[
+        "requests>=2.28",
+        'tomli>=2.0.1; python_version < "3.11"',
+    ],
     extras_require={
         "dev": ["pytest", "setuptools>=61"],
         # LangChain / LangGraph 1.x（LTS）；上限 <2 避免未来大版本静默破坏

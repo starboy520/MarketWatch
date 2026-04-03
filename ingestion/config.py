@@ -5,7 +5,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
 
-import tomllib
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python < 3.11
+    import tomli as tomllib  # type: ignore[no-redef]
 
 
 @dataclass(frozen=True)
