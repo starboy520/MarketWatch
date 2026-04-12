@@ -176,6 +176,6 @@ def invoke_for_tweet(
     app = graph if graph is not None else build_pipeline_graph(cfg)
     result: PipelineState = app.invoke(
         tweet_event_to_state(ev),
-        config={"configurable": {"thread_id": f"tweet:{ev.id}"}},
+        config={"configurable": {"thread_id": f"{ev.source}:{ev.id}"}},
     )
     return result

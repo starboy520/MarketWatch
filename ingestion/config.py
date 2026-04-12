@@ -30,6 +30,27 @@ class PollConfig:
 
 
 @dataclass(frozen=True)
+class ClsTelegraphConfig:
+    """财联社电报 nodeapi（签名与站点一致；详见 ingestion.sources.cls_telegraph）。"""
+
+    enabled: bool
+    base_url: str
+    timeout_sec: float
+    user_agent: str
+    app: str
+    os_name: str
+    sv: str
+    max_seen_ids: int
+
+
+@dataclass(frozen=True)
+class SourcesConfig:
+    """多数据源开关；后续可在此增加 ws、RSS 等。"""
+
+    cls_telegraph: ClsTelegraphConfig
+
+
+@dataclass(frozen=True)
 class FeishuConfig:
     """飞书应用发 IM：app_id、app_secret、receive_id（见开放平台文档）。"""
 
@@ -63,6 +84,7 @@ class LlmConfig:
 class AppConfig:
     x: XConfig
     poll: PollConfig
+    sources: SourcesConfig
     feishu: FeishuConfig
     llm: LlmConfig
 
@@ -83,6 +105,8 @@ def load_config(path: Optional[str] = None) -> AppConfig:
     data = tomllib.loads(cfg_path.read_text(encoding="utf-8"))
     x = data.get("x") or {}
     poll = data.get("poll") or {}
+    sources_raw = data.get("sources") or {}
+    cls_raw = sources_raw.get("cls_telegraph") or data.get("cls_telegraph") or {}
     fs = data.get("feishu") or {}
     llm = data.get("llm") or {}
 
@@ -111,6 +135,35 @@ def load_config(path: Optional[str] = None) -> AppConfig:
         checkpoint_file=str(poll.get("checkpoint_file") or "checkpoints.json").strip(),
     )
 
+    def _bool(v: object, default: bool = False) -> bool:
+        if v is None:
+            return default
+        if isinstance(v, bool):
+            return v
+        s = str(v).strip().lower()
+        if s in ("1", "true", "yes", "on"):
+            return True
+        if s in ("0", "false", "no", "off", ""):
+            return False
+        return default
+
+    cls_cfg = ClsTelegraphConfig(
+        enabled=_bool(cls_raw.get("enabled"), False),
+        base_url=str(cls_raw.get("base_url") or "https://www.cls.cn").strip().rstrip("/")
+        or "https://www.cls.cn",
+        timeout_sec=float(cls_raw.get("timeout_sec") or x.get("fetch_timeout_sec") or 20),
+        user_agent=str(
+            cls_raw.get("user_agent")
+            or x.get("fetch_user_agent")
+            or "Mozilla/5.0 (compatible; news-agent/1.0)"
+        ).strip(),
+        app=str(cls_raw.get("app") or "CailianpressWeb").strip(),
+        os_name=str(cls_raw.get("os") or "web").strip(),
+        sv=str(cls_raw.get("sv") or "8.4.6").strip(),
+        max_seen_ids=int(cls_raw.get("max_seen_ids") or 5000),
+    )
+    scfg = SourcesConfig(cls_telegraph=cls_cfg)
+
     fcfg = FeishuConfig(
         app_id=str(os.environ.get("FEISHU_APP_ID") or fs.get("app_id") or "").strip(),
         app_secret=str(os.environ.get("FEISHU_APP_SECRET") or fs.get("app_secret") or "").strip(),
@@ -136,5 +189,5 @@ def load_config(path: Optional[str] = None) -> AppConfig:
         timeout_sec=float(llm.get("timeout_sec") or 120),
     )
 
-    return AppConfig(x=xcfg, poll=pcfg, feishu=fcfg, llm=lcfg)
+    return AppConfig(x=xcfg, poll=pcfg, sources=scfg, feishu=fcfg, llm=lcfg)
 

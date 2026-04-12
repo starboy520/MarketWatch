@@ -21,6 +21,19 @@ interval_sec = 5
 max_results = 20
 checkpoint_file = "checkpoints.json"
 
+# 多数据源（与 X 共用同一轮询周期 poll.interval_sec）
+[sources.cls_telegraph]
+# 设为 true 后与 X 时间线在同一循环内轮询；checkpoint 写入 checkpoints.json 的 cls_telegraph 键
+enabled = false
+# base_url = "https://www.cls.cn"
+# timeout_sec = 20
+# user_agent = "Mozilla/5.0 ..."
+# app / os / sv 与站点前端一致，接口变更时可改
+# app = "CailianpressWeb"
+# os = "web"
+# sv = "8.4.6"
+# max_seen_ids = 5000
+
 # 飞书应用发 IM：app_id、app_secret、receive_id（及 receive_id_type）。
 # 文档：https://open.feishu.cn/document/server-docs/api-call-guide/calling-process/get-
 [feishu]

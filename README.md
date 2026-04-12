@@ -1,6 +1,6 @@
 # MarketWatch
 
-X（Twitter）时间线轮询 → **DeepSeek** 相关性/情绪分析 → 英文正文可选 **中译** → **飞书** IM 推送。编排基于 **LangGraph**。
+X（Twitter）时间线（可选 **财联社电报**，`[sources.cls_telegraph]`）→ **DeepSeek** 相关性/情绪分析 → 英文正文可选 **中译** → **飞书** IM 推送。编排基于 **LangGraph**。
 
 ---
 
@@ -9,7 +9,7 @@ X（Twitter）时间线轮询 → **DeepSeek** 相关性/情绪分析 → 英文
 - **Python 3.10+**
 - 环境：一键脚本与步骤见 **[docs/setup.md](docs/setup.md)**（`./scripts/setup_env.sh`）
 - 依赖：亦可手动 `pip install -r requirements.txt`（已含 `-e ".[pipeline]"` 与 LangGraph / LangChain 栈）
-- 配置：`cp config.example.toml config.toml`，按 **[docs/配置与安全.md](docs/配置与安全.md)** 填写密钥与 **X Bearer**（必填其一：`[x] public_bearer_token` 或 `NEWS_AGENT_X_BEARER`）
+- 配置：`cp config.example.toml config.toml`，按 **[docs/配置与安全.md](docs/配置与安全.md)** 填写密钥与 **X Bearer**（必填其一：`[x] public_bearer_token` 或 `NEWS_AGENT_X_BEARER`）；财联社见 `config.example.toml` 中 `[sources.cls_telegraph]`
 - 运行：`python main.py`
 
 ---

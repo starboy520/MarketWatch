@@ -7,6 +7,7 @@ from dataclasses import asdict, dataclass
 from typing import Any, Dict, Optional
 
 EVENT_NAME = "tweet.received"
+SOURCE_CLS_TELEGRAPH = "cls.telegraph"
 
 
 @dataclass(frozen=True)
