@@ -28,7 +28,6 @@ def _llm_failure_update(exc: Exception) -> dict[str, Any]:
     return {
         "analysis": {
             "is_relevant": False,
-            "broad_push_eligible": False,
             "china_related": False,
             "themes": [],
             "keywords": [],
@@ -45,7 +44,6 @@ def _analysis_stub_no_llm() -> dict[str, Any]:
     """未配置 LLM 时占位 analysis（一律放行严格门闩）。"""
     return {
         "is_relevant": True,
-        "broad_push_eligible": False,
         "china_related": False,
         "themes": [],
         "keywords": [],
@@ -93,8 +91,7 @@ def make_relevance_filter(
 
     若 ``llm`` 未配置，则内层走占位 ``analysis``，仍返回统一结构（含空 ``market_impact`` 供卡片用）。
 
-    放行规则：``is_relevant`` 且 ``confidence`` ≥ ``confidence_threshold``，或 ``broad_push_eligible``
-    为 true（后者不校验置信度，由模型单独给出宽松口径）。
+    放行规则：仅当 ``is_relevant`` 且 ``confidence`` ≥ ``confidence_threshold``。
     """
     analyzer = None  # 可选 ``TweetTriageAnalyzer``，在 llm 启用时创建
     if llm is not None and llm.enabled:
@@ -124,9 +121,8 @@ def make_relevance_filter(
 
         market_impact = dict(_EMPTY_MARKET_IMPACT)
         conf = float(analysis.get("confidence") or 0.0)
-        strict_ok = bool(analysis.get("is_relevant")) and conf >= confidence_threshold
-        broad_ok = bool(analysis.get("broad_push_eligible"))
-        if not strict_ok and not broad_ok:
+        ok = bool(analysis.get("is_relevant")) and conf >= confidence_threshold
+        if not ok:
             return {
                 "analysis": analysis,
                 "market_impact": market_impact,

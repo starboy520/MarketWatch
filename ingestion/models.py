@@ -1,4 +1,4 @@
-"""采集层标准化事件（对齐 docs/bloomberg_twitter_agent_design.md §4.1）。"""
+"""采集层标准化事件（对齐 docs/产品愿景与设计边界.md §4.1）。"""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ SOURCE_CLS_TELEGRAPH = "cls.telegraph"
 @dataclass(frozen=True)
 class TweetEvent:
     """
-    采集层标准事件（对齐 docs/bloomberg_twitter_agent_design.md §4.1）。
+    采集层标准事件（对齐 docs/产品愿景与设计边界.md §4.1）。
 
     字段约定
     --------

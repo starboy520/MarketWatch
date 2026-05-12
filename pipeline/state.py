@@ -1,4 +1,4 @@
-"""Pipeline State：与《docs/LangGraph 状态机设计.md》字段对齐。
+"""Pipeline State：与《docs/LangGraph编排说明.md》字段对齐。
 
 与 ``ingestion.models.TweetEvent`` 的对应关系（由 ``TweetEvent.pipeline_initial_state()`` 写入）：
 
@@ -13,8 +13,8 @@
 
 ``raw_text_zh``（``body_translate`` 节点写入）：英文正文的大模型简体中文译文，供飞书卡片展示。
 
-``analysis``（relevance_filter 写入）除 ``is_relevant`` / ``confidence`` 等外，另含
-``broad_push_eligible``：宽松口径（实质涉 AI 或中国），供下游与 ``is_relevant`` 组合决策。
+``analysis``（relevance_filter 写入）含 ``is_relevant``、``confidence``、``themes``、``keywords``、
+``sentiment`` 等；下游放行仅依赖 ``is_relevant`` 与置信度阈值（见 ``nodes.make_relevance_filter``）。
 """
 
 from __future__ import annotations

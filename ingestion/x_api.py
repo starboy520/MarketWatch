@@ -255,7 +255,7 @@ def _resolve_x_bearer_token(*, explicit: Optional[str], from_config: str) -> str
     if not bt:
         raise ValueError(
             "X GraphQL 需要 Bearer：请在 config.toml 的 [x] public_bearer_token 填写，"
-            "或设置环境变量 NEWS_AGENT_X_BEARER（勿提交到 Git）。说明见 docs/配置与安全.md"
+            "或设置环境变量 NEWS_AGENT_X_BEARER（勿提交到 Git）。说明见 docs/密钥与配置说明.md"
         )
     return bt
 

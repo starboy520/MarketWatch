@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 一键：创建虚拟环境 → 升级 pip → 安装依赖（见 docs/setup.md）
+# 一键：创建虚拟环境 → 升级 pip → 安装依赖（见 docs/本地环境搭建.md）
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -43,5 +43,5 @@ esac
 echo
 echo "完成。请在本终端执行："
 echo "  source \"$ROOT/$VENV/bin/activate\""
-echo "然后：cp config.example.toml config.toml，按 docs/配置与安全.md 填写密钥，运行 python main.py"
+echo "然后：cp config.example.toml config.toml，按 docs/密钥与配置说明.md 填写密钥，运行 python main.py"
 echo "运行测试：pytest -q"

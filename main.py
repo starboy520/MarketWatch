@@ -4,7 +4,7 @@
 用法：
   cp config.example.toml config.toml
   pip install -e ".[pipeline]"
-  # 按 docs/配置与安全.md 填写 [x]、飞书、[llm]；财联社见 [sources.cls_telegraph]
+  # 按 docs/密钥与配置说明.md 填写 [x]、飞书、[llm]；财联社见 [sources.cls_telegraph]
   python main.py
 """
 

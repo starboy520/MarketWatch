@@ -2,7 +2,7 @@
 LangGraph StateGraph：采集 TweetEvent → DeepSeek 分析 → 飞书。
 （当前跳过 ``market_retriever``：relevance_filter → body_translate → card_renderer → feishu_publisher。）
 
-relevance_filter 放行：``is_relevant`` 且置信度 ≥ 阈值，**或** ``broad_push_eligible``（宽松：涉 AI/中国）。
+relevance_filter 放行：仅当 ``is_relevant`` 且 ``confidence`` ≥ 阈值。
 
 依赖：pip install -e ".[pipeline]"（LangGraph / LangChain 1.x）
 密钥：环境变量 DEEPSEEK_API_KEY 或 config.toml [llm] api_key

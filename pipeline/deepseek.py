@@ -142,7 +142,6 @@ class TweetTriageAnalyzer(BaseDeepSeekChatClient):
 
         return {
             "is_relevant": bool(data.get("is_relevant", False)),
-            "broad_push_eligible": bool(data.get("broad_push_eligible", False)),
             "china_related": bool(data.get("china_related", False)),
             "confidence": float(data.get("confidence") or 0.0),
             "themes": [str(t) for t in themes],

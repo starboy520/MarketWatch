@@ -1,6 +1,6 @@
 [x]
 # Web GraphQL 所需的 public Bearer（必填其一：本字段 或 环境变量 NEWS_AGENT_X_BEARER）
-# 勿将真实 Token 提交到 Git；获取方式见 docs/配置与安全.md
+# 勿将真实 Token 提交到 Git；获取方式见 docs/密钥与配置说明.md
 public_bearer_token = ""
 
 # 采集代理（例如 "http://127.0.0.1:7890"），不需要可留空
